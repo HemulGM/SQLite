@@ -71,10 +71,10 @@ interface
     procedure WhereField(FieldName, Oper: string; FieldValue: Integer; Union:TWhereUnion = wuAnd); overload;
     procedure WhereField(FieldName, Oper: string; FieldValue: TDateTime; Union:TWhereUnion = wuAnd); overload;
     procedure WhereField(FieldName, Oper: string; FieldValue: Boolean; Union:TWhereUnion = wuAnd); overload;
-    
-	procedure WhereFieldWOQ(FieldName, Oper: string; FieldValue: string; Union:TWhereUnion = wuAnd);
-	
-	procedure WhereFieldIN(FieldName: string; FieldValues:array of string; Union:TWhereUnion = wuAnd); overload;
+
+    procedure WhereFieldWOQ(FieldName, Oper: string; FieldValue: string; Union:TWhereUnion = wuAnd);
+
+    procedure WhereFieldIN(FieldName: string; FieldValues:array of string; Union:TWhereUnion = wuAnd); overload;
     procedure WhereFieldIN(FieldName: string; FieldValues:array of Extended; Union:TWhereUnion = wuAnd); overload;
     procedure WhereFieldIN(FieldName: string; FieldValues:array of Integer; Union:TWhereUnion = wuAnd); overload;
     procedure WhereFieldIN(FieldName: string; FieldValues:array of TDateTime; Union:TWhereUnion = wuAnd); overload;
@@ -748,7 +748,6 @@ begin
    Result:=Result+FFieldValues[i].FieldName + ' = '+str;
    if i <> FFieldValues.Count - 1 then Result:=Result+', ';
   end;
- if (FDIValues.Count > 0) and (FFieldValues.Count > 0) then Result:=Result+', ';
  for i:= 0 to FDIValues.Count - 1 do
   begin
    str:='';
@@ -762,7 +761,7 @@ begin
     diMul: Result:=Result+FDIValues[i].FieldName+' = '+FDIValues[i].FieldName+' * '+str;
     diDiv: Result:=Result+FDIValues[i].FieldName+' = '+FDIValues[i].FieldName+' / '+str;
    end;
-   if i <> FDIValues.Count - 1then Result:=Result+', ';
+   if i <> FDIValues.Count - 1 then Result:=Result+', ';
   end;
  Result:=Result+Where;
 end;
@@ -885,7 +884,7 @@ begin
   wuNotOr: UnionStr:=' NOT OR ';
  end;
  if FUWheres.Count <= 0 then UnionStr:='';
- FUWheres.Add(UnionStr+FieldName+Oper+QuotedStr(FloatToSQLStr(FieldValue)));
+ FUWheres.Add(UnionStr+FieldName+Oper+QuotedStr(DateTimeToStr(FieldValue)));
 end;
 
 procedure SQL.WhereFieldEqual(FieldName: string; FieldValue: string; Union:TWhereUnion);
@@ -906,41 +905,6 @@ end;
 procedure SQL.WhereFieldEqual(FieldName: string; FieldValue: Boolean; Union:TWhereUnion);
 begin
  WhereField(FieldName, '=', FieldValue, Union);
-end;   
-
-procedure SQL.WhereFieldEqual(FieldName: string; FieldValue: TDateTime; Union:TWhereUnion);
-begin
- WhereField(FieldName, '=', FieldValue, Union);
-end;
-
-procedure SQL.WhereNotFieldEqual(FieldName: string; FieldValue: Extended; Union:TWhereUnion);
-begin
- WhereField(FieldName, '<>', FieldValue, Union);
-end;
-
-procedure SQL.WhereNotFieldEqual(FieldName, FieldValue: string; Union:TWhereUnion);
-begin
- WhereField(FieldName, '<>', FieldValue, Union);
-end;
-
-procedure SQL.WhereNotFieldEqual(FieldName: string; FieldValue: Integer; Union:TWhereUnion);
-begin
- WhereField(FieldName, '<>', FieldValue, Union);
-end;
-
-procedure SQL.WhereNotFieldEqual(FieldName: string; FieldValue: Boolean; Union:TWhereUnion);
-begin
- WhereField(FieldName, '<>', FieldValue, Union);
-end;
-
-procedure SQL.WhereStr(Value: string);
-begin
- FWhereStr:=Value;
-end;
-
-procedure SQL.WhereNotFieldEqual(FieldName: string; FieldValue: TDateTime; Union:TWhereUnion);
-begin
- WhereField(FieldName, '<>', FieldValue, Union);
 end;
 
 procedure SQL.WhereFieldIN(FieldName: string; FieldValues: array of Extended; Union: TWhereUnion);
@@ -1019,6 +983,41 @@ begin
  end;
  if FUWheres.Count <= 0 then UnionStr:='';
  FUWheres.Add(UnionStr+FieldName+Oper+FieldValue);
+end;
+
+procedure SQL.WhereFieldEqual(FieldName: string; FieldValue: TDateTime; Union:TWhereUnion);
+begin
+ WhereField(FieldName, '=', FieldValue, Union);
+end;
+
+procedure SQL.WhereNotFieldEqual(FieldName: string; FieldValue: Extended; Union:TWhereUnion);
+begin
+ WhereField(FieldName, '<>', FieldValue, Union);
+end;
+
+procedure SQL.WhereNotFieldEqual(FieldName, FieldValue: string; Union:TWhereUnion);
+begin
+ WhereField(FieldName, '<>', FieldValue, Union);
+end;
+
+procedure SQL.WhereNotFieldEqual(FieldName: string; FieldValue: Integer; Union:TWhereUnion);
+begin
+ WhereField(FieldName, '<>', FieldValue, Union);
+end;
+
+procedure SQL.WhereNotFieldEqual(FieldName: string; FieldValue: Boolean; Union:TWhereUnion);
+begin
+ WhereField(FieldName, '<>', FieldValue, Union);
+end;
+
+procedure SQL.WhereStr(Value: string);
+begin
+ FWhereStr:=Value;
+end;
+
+procedure SQL.WhereNotFieldEqual(FieldName: string; FieldValue: TDateTime; Union:TWhereUnion);
+begin
+ WhereField(FieldName, '<>', FieldValue, Union);
 end;
 
 { TUpdateBlob }
