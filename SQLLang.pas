@@ -884,7 +884,7 @@ begin
   wuNotOr: UnionStr:=' NOT OR ';
  end;
  if FUWheres.Count <= 0 then UnionStr:='';
- FUWheres.Add(UnionStr+FieldName+Oper+QuotedStr(DateTimeToStr(FieldValue)));
+ FUWheres.Add(UnionStr+FieldName+Oper+QuotedStr(FloatToSQLStr(FieldValue)));
 end;
 
 procedure SQL.WhereFieldEqual(FieldName: string; FieldValue: string; Union:TWhereUnion);
@@ -966,7 +966,7 @@ begin
  FieldValue:='';
  for i:= Low(FieldValues) to High(FieldValues) do
   begin
-   FieldValue:=FieldValue+QuotedStr(DateTimeToStr(FieldValues[i]));
+   FieldValue:=FieldValue+QuotedStr(FloatToSQLStr(FieldValues[i]));
    if i <> High(FieldValues) then FieldValue:=FieldValue+', ';
   end;
  WhereFieldWOQ(FieldName, ' IN ', '('+FieldValue+')', Union);
