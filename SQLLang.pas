@@ -338,6 +338,7 @@ end;
 
 class function SQL.PRAGMA(Key, Value: string): string;
 begin
+ //'PRAGMA key = "123456"'
  Result:='PRAGMA '+Key+' = "'+Value+'"';
 end;
 
