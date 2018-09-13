@@ -41,12 +41,12 @@ interface
   end;
   TDIValues = TList<TDIValue>;
 
-  TTable      = class;
-  TInsertInto = class;
-  TUpdate     = class;
-  TSelect     = class;
-  TDelete     = class;
-  TDropTable  = class;
+  TTable       = class;
+  TInsertInto  = class;
+  TUpdate      = class;
+  TSelect      = class;
+  TDelete      = class;
+  TDropTable   = class;
   TUpdateBlob  = class;
 
   BaseSQL = class
@@ -338,7 +338,6 @@ end;
 
 class function SQL.PRAGMA(Key, Value: string): string;
 begin
- //'PRAGMA key = "123456"'
  Result:='PRAGMA '+Key+' = "'+Value+'"';
 end;
 
@@ -402,8 +401,7 @@ end;
 function TTable.GetSQL: string;
 var i:Integer;
 begin
- //CREATE TABLE FirstTable (ID INTEGER PRIMARY KEY, MYTEXT TEXT, MYBLOB BLOB)
- Result:='CREATE TABLE '+TableName+' (';         //CREATE TABLE FirstTable (
+ Result:='CREATE TABLE '+TableName+' (';
  for i:= 0 to FFields.Count - 1 do
   begin
    Result:=Result+FFields[i].GetSQL;
@@ -455,14 +453,13 @@ end;
 function TInsertInto.GetSQL: string;
 var i:Integer;
 begin
- //insert into FirstTable (MYTEXT) values("Оно работает!")
- Result:='INSERT INTO '+TableName+' (';         //INSERT INTO FirstTable (
+ Result:='INSERT INTO '+TableName+' (';
  for i:= 0 to FFieldValues.Count - 1 do
   begin
    Result:=Result+FFieldValues[i].FieldName;
    if i <> FFieldValues.Count - 1 then Result:=Result+', ';
   end;
- Result:=Result+') VALUES (';                   //INSERT INTO FirstTable (FIELDNAMES) VALUES (
+ Result:=Result+') VALUES (';
  for i:= 0 to FFieldValues.Count - 1 do
   begin
    case FFieldValues[i].FieldType of
@@ -576,11 +573,8 @@ function TSelect.GetSQL: string;
 var i:Integer;
     FieldsStr, ALimit, AJoins:string;
 begin
- //'SELECT MYBLOB FROM FirstTable WHERE ID='+IntToStr(id);
  if FLimitInt > 0 then ALimit:=' LIMIT '+IntToStr(FLimitInt);
-
  if FDistinct then Result:='SELECT DISTINCT ' else Result:='SELECT ';
-
  FieldsStr:='';
  for i:= 0 to FFields.Count - 1 do
   begin
@@ -590,14 +584,11 @@ begin
  AJoins:='';
  for i:= 0 to FJoins.Count-1 do AJoins:=AJoins+FJoins[i]+' ';
  if AJoins <> '' then AJoins:=' '+AJoins;
- Result:=Result+FieldsStr+' FROM '+TableName+AJoins+Where+OrderByStr+ALimit;  //SELECT %s FROM FirstTable WHERE ID=1
-// Result:=Format(Result, [FieldsStr]);
+ Result:=Result+FieldsStr+' FROM '+TableName+AJoins+Where+OrderByStr+ALimit;
 end;
 
 procedure TSelect.InnerJoin(JoinTable, BaseField, JoinField:string);
 begin
- //SELECT EMP_ID, NAME, DEPT FROM COMPANY
- //INNER JOIN DEPARTMENT ON COMPANY.ID = DEPARTMENT.EMP_ID
  FJoins.Add('INNER JOIN '+JoinTable+' ON '+FName+'.'+BaseField+'='+JoinTable+'.'+JoinField);
 end;
 
@@ -732,8 +723,7 @@ function TUpdate.GetSQL: string;
 var i:Integer;
     str:string;
 begin
- //insert into FirstTable (MYTEXT) values("Оно работает!")
- Result:='UPDATE '+TableName+' SET ';         //INSERT INTO FirstTable (
+ Result:='UPDATE '+TableName+' SET ';
  for i:= 0 to FFieldValues.Count - 1 do
   begin
    str:='';
@@ -1024,9 +1014,7 @@ end;
 
 function TUpdateBlob.GetSQL: string;
 begin
- //SQLBase.UpdateBlob('UPDATE FirstTable SET MYBLOB = ? WHERE ID = '+IntToStr(id), BlobData)
  Result:='UPDATE '+FName+' SET '+FBlobField+' = ? '+Where;
- //SQLDB.UpdateBlob('UPDATE '+Table+' SET '+BlobField+' = ? '+Where, BlobData);
 end;
 
 end.
