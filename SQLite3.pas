@@ -358,7 +358,7 @@ begin
     @SQLite3_Create_Function:=     GetProcAddress(SQLiteDLLInstance, 'sqlite3_create_function');
     @SQLite3_Value_Text:=          GetProcAddress(SQLiteDLLInstance, 'sqlite3_value_text');
     @SQLite3_Result_Text:=         GetProcAddress(SQLiteDLLInstance, 'sqlite3_result_text');
-    @SQLite3_Result_Int:=        GetProcAddress(SQLiteDLLInstance, 'sqlite3_result_int');
+    @SQLite3_Result_Int:=          GetProcAddress(SQLiteDLLInstance, 'sqlite3_result_int');
    except
     on E:Exception do
      begin
