@@ -62,17 +62,27 @@ interface
     FWhereStr:string;
     FUWheres:TUnionWhere;
     function GetWhere: string;
+    function InsertUnion(Union: TWhereUnion): string;
    public
     function GetSQL:string; virtual; abstract;
     procedure EndCreate; virtual;
     procedure Clear; virtual;
+    procedure WhereParenthesesOpen(Union:TWhereUnion = wuAnd);
+    procedure WhereParenthesesClose;
+
+    procedure WhereFieldBetween(FieldName:string; ValueLeft, ValueRight:TDateTime; Union:TWhereUnion = wuAnd); overload;
+    procedure WhereFieldBetween(FieldName:string; ValueLeft, ValueRight:Extended; Union:TWhereUnion = wuAnd); overload;
+    procedure WhereFieldBetween(FieldName:string; ValueLeft, ValueRight:Integer; Union:TWhereUnion = wuAnd); overload;
+
+    procedure WhereFieldIsNull(FieldName:string; Union:TWhereUnion = wuAnd);
+    procedure WhereFieldIsNotNull(FieldName:string; Union:TWhereUnion = wuAnd);
     procedure WhereField(FieldName, Oper: string; FieldValue: string; Union:TWhereUnion = wuAnd); overload;
     procedure WhereField(FieldName, Oper: string; FieldValue: Extended; Union:TWhereUnion = wuAnd); overload;
     procedure WhereField(FieldName, Oper: string; FieldValue: Integer; Union:TWhereUnion = wuAnd); overload;
     procedure WhereField(FieldName, Oper: string; FieldValue: TDateTime; Union:TWhereUnion = wuAnd); overload;
     procedure WhereField(FieldName, Oper: string; FieldValue: Boolean; Union:TWhereUnion = wuAnd); overload;
 
-    procedure WhereFieldWOQ(FieldName, Oper: string; FieldValue: string; Union:TWhereUnion = wuAnd);
+    procedure WhereFieldWOQ(FieldName, Oper: string; FieldValue: string; Union:TWhereUnion = wuAnd);  //Без ковычек
 
     procedure WhereFieldIN(FieldName: string; FieldValues:array of string; Union:TWhereUnion = wuAnd); overload;
     procedure WhereFieldIN(FieldName: string; FieldValues:array of Extended; Union:TWhereUnion = wuAnd); overload;
@@ -813,68 +823,43 @@ begin
 end;
 
 procedure SQL.WhereField(FieldName, Oper: string; FieldValue: Extended; Union:TWhereUnion);
-var UnionStr:string;
 begin
- case Union of
-  wuAnd: UnionStr:=' AND ';
-  wuOr: UnionStr:=' OR ';
-  wuNotAnd: UnionStr:=' NOT AND ';
-  wuNotOr: UnionStr:=' NOT OR ';
- end;
- if FUWheres.Count <= 0 then UnionStr:='';
- FUWheres.Add(UnionStr+FieldName+Oper+QuotedStr(FloatToSQLStr(FieldValue)));
+ FUWheres.Add(InsertUnion(Union)+FieldName+Oper+QuotedStr(FloatToSQLStr(FieldValue)));
 end;
 
 procedure SQL.WhereField(FieldName, Oper, FieldValue: string; Union:TWhereUnion);
-var UnionStr:string;
 begin
- case Union of
-  wuAnd: UnionStr:=' AND ';
-  wuOr: UnionStr:=' OR ';
-  wuNotAnd: UnionStr:=' NOT AND ';
-  wuNotOr: UnionStr:=' NOT OR ';
- end;
- if FUWheres.Count <= 0 then UnionStr:='';
- FUWheres.Add(UnionStr+FieldName+Oper+QuotedStr(FieldValue));
+ FUWheres.Add(InsertUnion(Union)+FieldName+Oper+QuotedStr(FieldValue));
 end;
 
 procedure SQL.WhereField(FieldName, Oper: string; FieldValue: Integer; Union:TWhereUnion);
-var UnionStr:string;
 begin
- case Union of
-  wuAnd: UnionStr:=' AND ';
-  wuOr: UnionStr:=' OR ';
-  wuNotAnd: UnionStr:=' NOT AND ';
-  wuNotOr: UnionStr:=' NOT OR ';
- end;
- if FUWheres.Count <= 0 then UnionStr:='';
- FUWheres.Add(UnionStr+FieldName+Oper+QuotedStr(IntToStr(FieldValue)));
+ FUWheres.Add(InsertUnion(Union)+FieldName+Oper+QuotedStr(IntToStr(FieldValue)));
 end;
 
 procedure SQL.WhereField(FieldName, Oper: string; FieldValue: Boolean; Union:TWhereUnion);
-var UnionStr:string;
 begin
- case Union of
-  wuAnd: UnionStr:=' AND ';
-  wuOr: UnionStr:=' OR ';
-  wuNotAnd: UnionStr:=' NOT AND ';
-  wuNotOr: UnionStr:=' NOT OR ';
- end;
- if FUWheres.Count <= 0 then UnionStr:='';
- FUWheres.Add(UnionStr+FieldName+Oper+QuotedStr(IntToStr(Ord(FieldValue))));
+ FUWheres.Add(InsertUnion(Union)+FieldName+Oper+QuotedStr(IntToStr(Ord(FieldValue))));
+end;
+
+procedure SQL.WhereFieldBetween(FieldName: string; ValueLeft, ValueRight: TDateTime; Union: TWhereUnion);
+begin
+ FUWheres.Add(InsertUnion(Union)+FieldName+' between '+FloatToSQLStr(ValueLeft)+' and '+FloatToSQLStr(ValueRight));
+end;
+
+procedure SQL.WhereFieldBetween(FieldName: string; ValueLeft, ValueRight: Extended; Union: TWhereUnion);
+begin
+ FUWheres.Add(InsertUnion(Union)+FieldName+' between '+FloatToSQLStr(ValueLeft)+' and '+FloatToSQLStr(ValueRight));
+end;
+
+procedure SQL.WhereFieldBetween(FieldName: string; ValueLeft, ValueRight: Integer; Union: TWhereUnion);
+begin
+ FUWheres.Add(InsertUnion(Union)+FieldName+' between '+IntToStr(ValueLeft)+' and '+IntToStr(ValueRight));
 end;
 
 procedure SQL.WhereField(FieldName, Oper: string; FieldValue: TDateTime; Union:TWhereUnion);
-var UnionStr:string;
 begin
- case Union of
-  wuAnd: UnionStr:=' AND ';
-  wuOr: UnionStr:=' OR ';
-  wuNotAnd: UnionStr:=' NOT AND ';
-  wuNotOr: UnionStr:=' NOT OR ';
- end;
- if FUWheres.Count <= 0 then UnionStr:='';
- FUWheres.Add(UnionStr+FieldName+Oper+QuotedStr(FloatToSQLStr(FieldValue)));
+ FUWheres.Add(InsertUnion(Union)+FieldName+Oper+QuotedStr(FloatToSQLStr(FieldValue)));
 end;
 
 procedure SQL.WhereFieldEqual(FieldName: string; FieldValue: string; Union:TWhereUnion);
@@ -949,6 +934,29 @@ begin
  WhereFieldWOQ(FieldName, ' IN ', '('+FieldValue+')', Union);
 end;
 
+procedure SQL.WhereFieldIsNotNull(FieldName: string; Union: TWhereUnion);
+begin
+ FUWheres.Add(InsertUnion(Union)+' not '+FieldName+' is Null');
+end;
+
+function SQL.InsertUnion(Union:TWhereUnion):string;
+begin
+ case Union of
+  wuAnd: Result:=' AND ';
+  wuOr: Result:=' OR ';
+  wuNotAnd: Result:=' NOT AND ';
+  wuNotOr: Result:=' NOT OR ';
+ end;
+ if FUWheres.Count <= 0 then Result:=''
+ else
+  if FUWheres[FUWheres.Count-1][Length(FUWheres[FUWheres.Count-1])] = '(' then Result:='';
+end;
+
+procedure SQL.WhereFieldIsNull(FieldName: string; Union: TWhereUnion);
+begin
+ FUWheres.Add(InsertUnion(Union)+FieldName+' is Null');
+end;
+
 procedure SQL.WhereFieldIN(FieldName: string; FieldValues: array of TDateTime; Union: TWhereUnion);
 var FieldValue:string;
     i:Integer;
@@ -963,16 +971,8 @@ begin
 end;
 
 procedure SQL.WhereFieldWOQ(FieldName, Oper, FieldValue: string; Union: TWhereUnion);
-var UnionStr:string;
 begin
- case Union of
-  wuAnd: UnionStr:=' AND ';
-  wuOr: UnionStr:=' OR ';
-  wuNotAnd: UnionStr:=' NOT AND ';
-  wuNotOr: UnionStr:=' NOT OR ';
- end;
- if FUWheres.Count <= 0 then UnionStr:='';
- FUWheres.Add(UnionStr+FieldName+Oper+FieldValue);
+ FUWheres.Add(InsertUnion(Union)+FieldName+Oper+FieldValue);
 end;
 
 procedure SQL.WhereFieldEqual(FieldName: string; FieldValue: TDateTime; Union:TWhereUnion);
@@ -998,6 +998,16 @@ end;
 procedure SQL.WhereNotFieldEqual(FieldName: string; FieldValue: Boolean; Union:TWhereUnion);
 begin
  WhereField(FieldName, '<>', FieldValue, Union);
+end;
+
+procedure SQL.WhereParenthesesClose;
+begin
+ FUWheres.Add(') ');
+end;
+
+procedure SQL.WhereParenthesesOpen;
+begin
+ FUWheres.Add(InsertUnion(Union)+' (');
 end;
 
 procedure SQL.WhereStr(Value: string);
