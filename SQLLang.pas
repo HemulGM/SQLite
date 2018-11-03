@@ -142,6 +142,9 @@ interface
   end;
 
   TInsertInto = class(BaseSQL)
+  private
+    FDoubleDoubleQuote: Boolean;
+    procedure SetDoubleDoubleQuote(const Value: Boolean);
    protected
     FFieldValues:TInsertValues;
    public
@@ -156,9 +159,13 @@ interface
     procedure AddValueAsParam(FieldName:string; ParamChar:string = ':'; CharOnly:Boolean = False);
     constructor Create; virtual;
     property TableName;
+    property DoubleDoubleQuote:Boolean read FDoubleDoubleQuote write SetDoubleDoubleQuote default False;
   end;
 
   TUpdate = class(SQL)
+  private
+    FDoubleDoubleQuote: Boolean;
+    procedure SetDoubleDoubleQuote(const Value: Boolean);
    protected
     FFieldValues:TInsertValues;
     FDIValues:TDIValues;
@@ -181,6 +188,7 @@ interface
     procedure AddValueAsParam(FieldName:string; ParamChar:string = ':'; CharOnly:Boolean = False);
     constructor Create; override;
     property TableName;
+    property DoubleDoubleQuote:Boolean read FDoubleDoubleQuote write SetDoubleDoubleQuote;
   end;
 
   TSelect = class(SQL)
@@ -457,6 +465,7 @@ end;
 constructor TInsertInto.Create;
 begin
  inherited;
+ FDoubleDoubleQuote:=False;
  FFieldValues:=TInsertValues.Create;
 end;
 
@@ -485,6 +494,11 @@ begin
  Result:=Result+')';
 end;
 
+procedure TInsertInto.SetDoubleDoubleQuote(const Value: Boolean);
+begin
+ FDoubleDoubleQuote:=Value;
+end;
+
 procedure TInsertInto.AddValue(FieldName: string; FieldValue: Extended);
 begin
  FFieldValues.Add(InsertValue(FieldName, ftFloat, FieldValue));
@@ -492,7 +506,8 @@ end;
 
 procedure TInsertInto.AddValue(FieldName, FieldValue: string);
 begin
- FieldValue:=StringReplace(FieldValue, '"', '""', [rfReplaceAll]);
+ if FDoubleDoubleQuote then
+  FieldValue:=StringReplace(FieldValue, '"', '""', [rfReplaceAll]);
  FFieldValues.Add(InsertValue(FieldName, ftString, FieldValue));
 end;
 
@@ -649,7 +664,8 @@ end;
 
 procedure TUpdate.AddValue(FieldName, FieldValue: string);
 begin
- FieldValue:=StringReplace(FieldValue, '"', '""', [rfReplaceAll]);
+ if FDoubleDoubleQuote then
+  FieldValue:=StringReplace(FieldValue, '"', '""', [rfReplaceAll]);
  FFieldValues.Add(InsertValue(FieldName, ftString, FieldValue));
 end;
 
@@ -685,6 +701,7 @@ end;
 constructor TUpdate.Create;
 begin
  inherited;
+ FDoubleDoubleQuote:=False;
  FFieldValues:=TInsertValues.Create;
  FDIValues:=TDIValues.Create;
 end;
@@ -727,6 +744,11 @@ end;
 procedure TUpdate.MulValue(FieldName: string; Value: Extended);
 begin
  FDIValues.Add(DIValue(FieldName, ftFloat, diMul, Value));
+end;
+
+procedure TUpdate.SetDoubleDoubleQuote(const Value: Boolean);
+begin
+ FDoubleDoubleQuote:=Value;
 end;
 
 function TUpdate.GetSQL: string;
