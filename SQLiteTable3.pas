@@ -810,19 +810,19 @@ var n, i:integer;
 begin
  try
   for n:=0 to fParams.Count-1 do
-  begin
-   Param:=TSQliteParam(fParams[n]);
-   i:=SQLite3_Bind_Parameter_index(Stmt, PAnsiChar(Param.Name));
-   if i > 0 then
    begin
-    case Param.ValueType of
-     SQLITE_INTEGER:SQLite3_Bind_Int64(Stmt, i, Param.ValueInteger);
-     SQLITE_FLOAT:  SQLite3_Bind_Double(Stmt, i, Param.ValueFloat);
-     SQLITE_TEXT:   SQLite3_Bind_Text(Stmt, i, PAnsiChar(Param.ValueData), Length(Param.ValueData), SQLITE_TRANSIENT);
-     SQLITE_NULL:   SQLite3_Bind_Null(Stmt, i);
-    end;
+    Param:=TSQliteParam(fParams[n]);
+    i:=SQLite3_Bind_Parameter_index(Stmt, PAnsiChar(Param.Name));
+    if i > 0 then
+     begin
+      case Param.ValueType of
+       SQLITE_INTEGER:SQLite3_Bind_Int64(Stmt, i, Param.ValueInteger);
+       SQLITE_FLOAT:  SQLite3_Bind_Double(Stmt, i, Param.ValueFloat);
+       SQLITE_TEXT:   SQLite3_Bind_Text(Stmt, i, PAnsiChar(Param.ValueData), Length(Param.ValueData), SQLITE_TRANSIENT);
+       SQLITE_NULL:   SQLite3_Bind_Null(Stmt, i);
+      end;
+     end;
    end;
-  end;
  finally
   ParamsClear;
  end;
