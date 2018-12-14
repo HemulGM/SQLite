@@ -261,6 +261,11 @@ begin
  Result:=StringReplace(Result, ',', '.', [rfReplaceAll]);
 end;
 
+function BoolToSQLStr(Value:Boolean):string;
+begin
+ if Value then Exit('1') else Exit('0');
+end;
+
 function FieldTypeToStr(Value:TFieldType):string;
 begin
  case Value of
@@ -486,7 +491,7 @@ begin
     ftString:  Result:=Result+QuotedStr(FFieldValues[i].Value);
     ftFloat:   Result:=Result+QuotedStr(FloatToSQLStr(FFieldValues[i].Value));
     ftDateTime:Result:=Result+QuotedStr(FloatToSQLStr(FFieldValues[i].Value));
-    ftBoolean: Result:=Result+QuotedStr(IntToStr(FFieldValues[i].Value));
+    ftBoolean: Result:=Result+QuotedStr(BoolToSQLStr(FFieldValues[i].Value));
     ftParam:   Result:=Result+FFieldValues[i].Value;
    end;
    if i <> FFieldValues.Count - 1 then Result:=Result+', ';
@@ -764,7 +769,7 @@ begin
     ftString:  str:=QuotedStr(FFieldValues[i].Value);
     ftFloat:   str:=QuotedStr(FloatToSQLStr(FFieldValues[i].Value));
     ftDateTime:str:=QuotedStr(FloatToSQLStr(FFieldValues[i].Value));
-    ftBoolean: str:=QuotedStr(IntToStr(Ord(FFieldValues[i].Value <> 0)));
+    ftBoolean: str:=QuotedStr(BoolToSQLStr(FFieldValues[i].Value));
     ftParam:   str:=FFieldValues[i].Value;
    end;
    Result:=Result+FFieldValues[i].FieldName + ' = '+str;
@@ -861,7 +866,7 @@ end;
 
 procedure SQL.WhereField(FieldName, Oper: string; FieldValue: Boolean; Union:TWhereUnion);
 begin
- FUWheres.Add(InsertUnion(Union)+FieldName+Oper+QuotedStr(IntToStr(Ord(FieldValue))));
+ FUWheres.Add(InsertUnion(Union)+FieldName+Oper+QuotedStr(BoolToSQLStr(FieldValue)));
 end;
 
 procedure SQL.WhereFieldBetween(FieldName: string; ValueLeft, ValueRight: TDateTime; Union: TWhereUnion);
@@ -950,7 +955,7 @@ begin
  FieldValue:='';
  for i:= Low(FieldValues) to High(FieldValues) do
   begin
-   FieldValue:=FieldValue+QuotedStr(IntToStr(Ord(FieldValues[i])));
+   FieldValue:=FieldValue+QuotedStr(BoolToSQLStr(FieldValues[i]));
    if i <> High(FieldValues) then FieldValue:=FieldValue+', ';
   end;
  WhereFieldWOQ(FieldName, ' IN ', '('+FieldValue+')', Union);
