@@ -207,7 +207,7 @@ interface
     procedure AddField(Name:string);
     procedure AddFieldCount(Name:string; Alias:string = '');
     procedure InnerJoin(JoinTable, BaseField, JoinField:string);
-    procedure LeftJoin(JoinTable, BaseField, JoinField:string);
+    procedure LeftJoin(JoinTable, BaseField, JoinField:string; AndWhere:string = '');
     procedure RightJoin(JoinTable, BaseField, JoinField:string);
     procedure OrderBy(FieldName:string; DESC:Boolean = False);
     procedure Clear; override;
@@ -622,9 +622,12 @@ begin
  FJoins.Add('INNER JOIN '+JoinTable+' ON '+FName+'.'+BaseField+'='+JoinTable+'.'+JoinField);
 end;
 
-procedure TSelect.LeftJoin(JoinTable, BaseField, JoinField: string);
+procedure TSelect.LeftJoin(JoinTable, BaseField, JoinField: string; AndWhere:string = '');
+var tmp:string;
 begin
- FJoins.Add('LEFT JOIN '+JoinTable+' ON '+FName+'.'+BaseField+'='+JoinTable+'.'+JoinField);
+ if AndWhere.Length > 0 then tmp:=' and '+AndWhere
+ else tmp:='';
+ FJoins.Add('LEFT JOIN '+JoinTable+' ON '+FName+'.'+BaseField+'='+JoinTable+'.'+JoinField+tmp);
 end;
 
 procedure TSelect.OrderBy(FieldName: string; DESC: Boolean);
