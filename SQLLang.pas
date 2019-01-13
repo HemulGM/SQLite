@@ -62,7 +62,7 @@ interface
     FWhereStr:string;
     FUWheres:TUnionWhere;
     function GetWhere: string;
-    function InsertUnion(Union: TWhereUnion): string;
+    function InsertUnion(const Union: TWhereUnion): string;
    public
     function GetSQL:string; virtual; abstract;
     procedure EndCreate; virtual;
@@ -70,37 +70,37 @@ interface
     procedure WhereParenthesesOpen(Union:TWhereUnion = wuAnd);
     procedure WhereParenthesesClose;
 
-    procedure WhereFieldBetween(FieldName:string; ValueLeft, ValueRight:TDateTime; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereFieldBetween(FieldName:string; ValueLeft, ValueRight:Extended; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereFieldBetween(FieldName:string; ValueLeft, ValueRight:Integer; Union:TWhereUnion = wuAnd); overload;
+    procedure WhereFieldBetween(const FieldName:string; const ValueLeft, ValueRight:TDateTime; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereFieldBetween(const FieldName:string; const ValueLeft, ValueRight:Extended; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereFieldBetween(const FieldName:string; const ValueLeft, ValueRight:Integer; const Union:TWhereUnion = wuAnd); overload;
 
-    procedure WhereFieldIsNull(FieldName:string; Union:TWhereUnion = wuAnd);
-    procedure WhereFieldIsNotNull(FieldName:string; Union:TWhereUnion = wuAnd);
-    procedure WhereField(FieldName, Oper: string; FieldValue: string; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereField(FieldName, Oper: string; FieldValue: Extended; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereField(FieldName, Oper: string; FieldValue: Integer; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereField(FieldName, Oper: string; FieldValue: TDateTime; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereField(FieldName, Oper: string; FieldValue: Boolean; Union:TWhereUnion = wuAnd); overload;
+    procedure WhereFieldIsNull(const FieldName:string; const Union:TWhereUnion = wuAnd);
+    procedure WhereFieldIsNotNull(const FieldName:string; const Union:TWhereUnion = wuAnd);
+    procedure WhereField(const FieldName, Oper: string; const FieldValue: string; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereField(const FieldName, Oper: string; const FieldValue: Extended; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereField(const FieldName, Oper: string; const FieldValue: Integer; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereField(const FieldName, Oper: string; const FieldValue: TDateTime; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereField(const FieldName, Oper: string; const FieldValue: Boolean; const Union:TWhereUnion = wuAnd); overload;
 
-    procedure WhereFieldWOQ(FieldName, Oper: string; FieldValue: string; Union:TWhereUnion = wuAnd);  //Без ковычек
+    procedure WhereFieldWOQ(const FieldName, Oper: string; const FieldValue: string; const Union:TWhereUnion = wuAnd);  //Без ковычек
 
-    procedure WhereFieldIN(FieldName: string; FieldValues:array of string; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereFieldIN(FieldName: string; FieldValues:array of Extended; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereFieldIN(FieldName: string; FieldValues:array of Integer; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereFieldIN(FieldName: string; FieldValues:array of TDateTime; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereFieldIN(FieldName: string; FieldValues:array of Boolean; Union:TWhereUnion = wuAnd); overload;
+    procedure WhereFieldIN(const FieldName: string; const FieldValues:array of string; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereFieldIN(const FieldName: string; const FieldValues:array of Extended; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereFieldIN(const FieldName: string; const FieldValues:array of Integer; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereFieldIN(const FieldName: string; const FieldValues:array of TDateTime; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereFieldIN(const FieldName: string; const FieldValues:array of Boolean; const Union:TWhereUnion = wuAnd); overload;
 
-    procedure WhereFieldEqual(FieldName: string; FieldValue: string; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereFieldEqual(FieldName: string; FieldValue: Extended; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereFieldEqual(FieldName: string; FieldValue: Integer; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereFieldEqual(FieldName: string; FieldValue: TDateTime; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereFieldEqual(FieldName: string; FieldValue: Boolean; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereNotFieldEqual(FieldName: string; FieldValue: string; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereNotFieldEqual(FieldName: string; FieldValue: Extended; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereNotFieldEqual(FieldName: string; FieldValue: Integer; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereNotFieldEqual(FieldName: string; FieldValue: TDateTime; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereNotFieldEqual(FieldName: string; FieldValue: Boolean; Union:TWhereUnion = wuAnd); overload;
-    procedure WhereStr(Value:string);
+    procedure WhereFieldEqual(const FieldName: string; const FieldValue: string; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereFieldEqual(const FieldName: string; const FieldValue: Extended; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereFieldEqual(const FieldName: string; const FieldValue: Integer; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereFieldEqual(const FieldName: string; const FieldValue: TDateTime; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereFieldEqual(const FieldName: string; const FieldValue: Boolean; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereNotFieldEqual(const FieldName: string; const FieldValue: string; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereNotFieldEqual(const FieldName: string; const FieldValue: Extended; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereNotFieldEqual(const FieldName: string; const FieldValue: Integer; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereNotFieldEqual(const FieldName: string; const FieldValue: TDateTime; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereNotFieldEqual(const FieldName: string; const FieldValue: Boolean; const Union:TWhereUnion = wuAnd); overload;
+    procedure WhereStr(const Value:string);
     constructor Create; virtual;
     property Where:string read GetWhere;
    public
@@ -842,6 +842,7 @@ end;
 function SQL.GetWhere: string;
 var i:Integer;
 begin
+ Result:='';
  for i:= 0 to FUWheres.Count-1 do Result:=Result+FUWheres[i];
  if FWhereStr <> '' then Result:=Result+' '+FWhereStr;
  if Result <> '' then Result:=' WHERE '+Result;
@@ -852,67 +853,67 @@ begin
  FName:=Value;
 end;
 
-procedure SQL.WhereField(FieldName, Oper: string; FieldValue: Extended; Union:TWhereUnion);
+procedure SQL.WhereField(const FieldName, Oper: string; const FieldValue: Extended; const Union:TWhereUnion);
 begin
  FUWheres.Add(InsertUnion(Union)+FieldName+Oper+QuotedStr(FloatToSQLStr(FieldValue)));
 end;
 
-procedure SQL.WhereField(FieldName, Oper, FieldValue: string; Union:TWhereUnion);
+procedure SQL.WhereField(const FieldName, Oper: string; const FieldValue:string; const Union:TWhereUnion);
 begin
  FUWheres.Add(InsertUnion(Union)+FieldName+Oper+QuotedStr(FieldValue));
 end;
 
-procedure SQL.WhereField(FieldName, Oper: string; FieldValue: Integer; Union:TWhereUnion);
+procedure SQL.WhereField(const FieldName, Oper: string; const FieldValue: Integer; const Union:TWhereUnion);
 begin
  FUWheres.Add(InsertUnion(Union)+FieldName+Oper+QuotedStr(IntToStr(FieldValue)));
 end;
 
-procedure SQL.WhereField(FieldName, Oper: string; FieldValue: Boolean; Union:TWhereUnion);
+procedure SQL.WhereField(const FieldName, Oper: string; const FieldValue: Boolean; const Union:TWhereUnion);
 begin
  FUWheres.Add(InsertUnion(Union)+FieldName+Oper+QuotedStr(BoolToSQLStr(FieldValue)));
 end;
 
-procedure SQL.WhereFieldBetween(FieldName: string; ValueLeft, ValueRight: TDateTime; Union: TWhereUnion);
+procedure SQL.WhereFieldBetween(const FieldName: string; const ValueLeft, ValueRight: TDateTime; const Union: TWhereUnion);
 begin
  FUWheres.Add(InsertUnion(Union)+FieldName+' between '+FloatToSQLStr(ValueLeft)+' and '+FloatToSQLStr(ValueRight));
 end;
 
-procedure SQL.WhereFieldBetween(FieldName: string; ValueLeft, ValueRight: Extended; Union: TWhereUnion);
+procedure SQL.WhereFieldBetween(const FieldName: string; const ValueLeft, ValueRight: Extended; const Union: TWhereUnion);
 begin
  FUWheres.Add(InsertUnion(Union)+FieldName+' between '+FloatToSQLStr(ValueLeft)+' and '+FloatToSQLStr(ValueRight));
 end;
 
-procedure SQL.WhereFieldBetween(FieldName: string; ValueLeft, ValueRight: Integer; Union: TWhereUnion);
+procedure SQL.WhereFieldBetween(const FieldName: string; const ValueLeft, ValueRight: Integer; const Union: TWhereUnion);
 begin
  FUWheres.Add(InsertUnion(Union)+FieldName+' between '+IntToStr(ValueLeft)+' and '+IntToStr(ValueRight));
 end;
 
-procedure SQL.WhereField(FieldName, Oper: string; FieldValue: TDateTime; Union:TWhereUnion);
+procedure SQL.WhereField(const FieldName, Oper: string; const FieldValue: TDateTime; const Union:TWhereUnion);
 begin
  FUWheres.Add(InsertUnion(Union)+FieldName+Oper+QuotedStr(FloatToSQLStr(FieldValue)));
 end;
 
-procedure SQL.WhereFieldEqual(FieldName: string; FieldValue: string; Union:TWhereUnion);
+procedure SQL.WhereFieldEqual(const FieldName: string; const FieldValue: string; const Union:TWhereUnion);
 begin
  WhereField(FieldName, '=', FieldValue, Union);
 end;
 
-procedure SQL.WhereFieldEqual(FieldName: string; FieldValue: Integer; Union:TWhereUnion);
+procedure SQL.WhereFieldEqual(const FieldName: string; const FieldValue: Integer; const Union:TWhereUnion);
 begin
  WhereField(FieldName, '=', FieldValue, Union);
 end;
 
-procedure SQL.WhereFieldEqual(FieldName: string; FieldValue: Extended; Union:TWhereUnion);
+procedure SQL.WhereFieldEqual(const FieldName: string; const FieldValue: Extended; const Union:TWhereUnion);
 begin
  WhereField(FieldName, '=', FieldValue, Union);
 end;
 
-procedure SQL.WhereFieldEqual(FieldName: string; FieldValue: Boolean; Union:TWhereUnion);
+procedure SQL.WhereFieldEqual(const FieldName: string; const FieldValue: Boolean; const Union:TWhereUnion);
 begin
  WhereField(FieldName, '=', FieldValue, Union);
 end;
 
-procedure SQL.WhereFieldIN(FieldName: string; FieldValues: array of Extended; Union: TWhereUnion);
+procedure SQL.WhereFieldIN(const FieldName: string; const FieldValues: array of Extended; const Union: TWhereUnion);
 var FieldValue:string;
     i:Integer;
 begin
@@ -925,7 +926,7 @@ begin
  WhereFieldWOQ(FieldName, ' IN ', '('+FieldValue+')', Union);
 end;
 
-procedure SQL.WhereFieldIN(FieldName: string; FieldValues: array of string; Union: TWhereUnion);
+procedure SQL.WhereFieldIN(const FieldName: string; const FieldValues: array of string; const Union: TWhereUnion);
 var FieldValue:string;
     i:Integer;
 begin
@@ -938,7 +939,7 @@ begin
  WhereFieldWOQ(FieldName, ' IN ', '('+FieldValue+')', Union);
 end;
 
-procedure SQL.WhereFieldIN(FieldName: string; FieldValues: array of Integer; Union: TWhereUnion);
+procedure SQL.WhereFieldIN(const FieldName: string; const FieldValues: array of Integer; const Union: TWhereUnion);
 var FieldValue:string;
     i:Integer;
 begin
@@ -951,7 +952,7 @@ begin
  WhereFieldWOQ(FieldName, ' IN ', '('+FieldValue+')', Union);
 end;
 
-procedure SQL.WhereFieldIN(FieldName: string; FieldValues: array of Boolean; Union: TWhereUnion);
+procedure SQL.WhereFieldIN(const FieldName: string; const FieldValues: array of Boolean; const Union: TWhereUnion);
 var FieldValue:string;
     i:Integer;
 begin
@@ -964,12 +965,12 @@ begin
  WhereFieldWOQ(FieldName, ' IN ', '('+FieldValue+')', Union);
 end;
 
-procedure SQL.WhereFieldIsNotNull(FieldName: string; Union: TWhereUnion);
+procedure SQL.WhereFieldIsNotNull(const FieldName: string; const Union: TWhereUnion);
 begin
  FUWheres.Add(InsertUnion(Union)+' not '+FieldName+' is Null');
 end;
 
-function SQL.InsertUnion(Union:TWhereUnion):string;
+function SQL.InsertUnion(const Union:TWhereUnion):string;
 begin
  case Union of
   wuAnd: Result:=' AND ';
@@ -982,12 +983,12 @@ begin
   if FUWheres[FUWheres.Count-1][Length(FUWheres[FUWheres.Count-1])] = '(' then Result:='';
 end;
 
-procedure SQL.WhereFieldIsNull(FieldName: string; Union: TWhereUnion);
+procedure SQL.WhereFieldIsNull(const FieldName: string; const Union: TWhereUnion);
 begin
  FUWheres.Add(InsertUnion(Union)+FieldName+' is Null');
 end;
 
-procedure SQL.WhereFieldIN(FieldName: string; FieldValues: array of TDateTime; Union: TWhereUnion);
+procedure SQL.WhereFieldIN(const FieldName: string; const FieldValues: array of TDateTime; const Union: TWhereUnion);
 var FieldValue:string;
     i:Integer;
 begin
@@ -1000,32 +1001,32 @@ begin
  WhereFieldWOQ(FieldName, ' IN ', '('+FieldValue+')', Union);
 end;
 
-procedure SQL.WhereFieldWOQ(FieldName, Oper, FieldValue: string; Union: TWhereUnion);
+procedure SQL.WhereFieldWOQ(const FieldName, Oper, FieldValue: string; const Union: TWhereUnion);
 begin
  FUWheres.Add(InsertUnion(Union)+FieldName+Oper+FieldValue);
 end;
 
-procedure SQL.WhereFieldEqual(FieldName: string; FieldValue: TDateTime; Union:TWhereUnion);
+procedure SQL.WhereFieldEqual(const FieldName: string; const FieldValue: TDateTime; const Union:TWhereUnion);
 begin
  WhereField(FieldName, '=', FieldValue, Union);
 end;
 
-procedure SQL.WhereNotFieldEqual(FieldName: string; FieldValue: Extended; Union:TWhereUnion);
+procedure SQL.WhereNotFieldEqual(const FieldName: string; const FieldValue: Extended; const Union:TWhereUnion);
 begin
  WhereField(FieldName, '<>', FieldValue, Union);
 end;
 
-procedure SQL.WhereNotFieldEqual(FieldName, FieldValue: string; Union:TWhereUnion);
+procedure SQL.WhereNotFieldEqual(const FieldName: string; const FieldValue:string; const Union:TWhereUnion);
 begin
  WhereField(FieldName, '<>', FieldValue, Union);
 end;
 
-procedure SQL.WhereNotFieldEqual(FieldName: string; FieldValue: Integer; Union:TWhereUnion);
+procedure SQL.WhereNotFieldEqual(const FieldName: string; const FieldValue: Integer; const Union:TWhereUnion);
 begin
  WhereField(FieldName, '<>', FieldValue, Union);
 end;
 
-procedure SQL.WhereNotFieldEqual(FieldName: string; FieldValue: Boolean; Union:TWhereUnion);
+procedure SQL.WhereNotFieldEqual(const FieldName: string; const FieldValue: Boolean; const Union:TWhereUnion);
 begin
  WhereField(FieldName, '<>', FieldValue, Union);
 end;
@@ -1040,12 +1041,12 @@ begin
  FUWheres.Add(InsertUnion(Union)+' (');
 end;
 
-procedure SQL.WhereStr(Value: string);
+procedure SQL.WhereStr(const Value: string);
 begin
  FWhereStr:=Value;
 end;
 
-procedure SQL.WhereNotFieldEqual(FieldName: string; FieldValue: TDateTime; Union:TWhereUnion);
+procedure SQL.WhereNotFieldEqual(const FieldName: string; const FieldValue: TDateTime; const Union:TWhereUnion);
 begin
  WhereField(FieldName, '<>', FieldValue, Union);
 end;
