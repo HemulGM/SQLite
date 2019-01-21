@@ -100,6 +100,9 @@ interface
     procedure WhereNotFieldEqual(const FieldName: string; const FieldValue: Integer; const Union:TWhereUnion = wuAnd); overload;
     procedure WhereNotFieldEqual(const FieldName: string; const FieldValue: TDateTime; const Union:TWhereUnion = wuAnd); overload;
     procedure WhereNotFieldEqual(const FieldName: string; const FieldValue: Boolean; const Union:TWhereUnion = wuAnd); overload;
+
+    procedure WhereExists(const Select:string; const Union:TWhereUnion = wuAnd);
+
     procedure WhereStr(const Value:string);
     constructor Create; virtual;
     property Where:string read GetWhere;
@@ -204,7 +207,7 @@ interface
     FFields:TFieldNames;
    public
     function GetSQL:string; override;
-    procedure AddField(Name:string);
+    procedure AddField(Name:string; IFNULL:string = '');
     procedure AddFieldCount(Name:string; Alias:string = '');
     procedure InnerJoin(JoinTable, BaseField, JoinField:string);
     procedure LeftJoin(JoinTable, BaseField, JoinField:string; AndWhere:string = '');
@@ -553,9 +556,10 @@ end;
 
 { TSelect }
 
-procedure TSelect.AddField(Name:string);
+procedure TSelect.AddField(Name:string; IFNULL:string);
 begin
- FFields.Add(Name);
+ if IFNULL.IsEmpty then FFields.Add(Name)
+ else FFields.Add('IFNULL('+Name+', '+IFNULL+')');
 end;
 
 procedure TSelect.AddFieldCount(Name, Alias: string);
@@ -851,6 +855,11 @@ end;
 procedure BaseSQL.SetName(const Value: string);
 begin
  FName:=Value;
+end;
+
+procedure SQL.WhereExists(const Select: string; const Union: TWhereUnion);
+begin
+ FUWheres.Add(InsertUnion(Union)+' EXISTS('+Select+')');
 end;
 
 procedure SQL.WhereField(const FieldName, Oper: string; const FieldValue: Extended; const Union:TWhereUnion);
