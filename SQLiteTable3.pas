@@ -173,7 +173,7 @@ type
     procedure SetTimeout(Value:Integer);
     procedure UpdateBlob(const SQL:string; BlobData:TStream);
     property DB:TSQLiteDB read fDB;
-    constructor Create(const FileName:string);
+    constructor Create(const FileName:string); virtual;
     destructor Destroy; override;
     //props
     property IsTransactionOpen:Boolean read fInTrans;
