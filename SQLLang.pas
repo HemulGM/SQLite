@@ -83,6 +83,7 @@ type
     procedure Clear; virtual;
     procedure WhereParenthesesOpen(Union: TWhereUnion = wuAnd);
     procedure WhereParenthesesClose;
+    procedure WhereFieldLike(const FieldName: string; const Value: string; const Union: TWhereUnion = wuAnd); overload;
     procedure WhereFieldBetween(const FieldName: string; const ValueLeft, ValueRight: TDateTime; const Union: TWhereUnion = wuAnd); overload;
     procedure WhereFieldBetween(const FieldName: string; const ValueLeft, ValueRight: Extended; const Union: TWhereUnion = wuAnd); overload;
     procedure WhereFieldBetween(const FieldName: string; const ValueLeft, ValueRight: Integer; const Union: TWhereUnion = wuAnd); overload;
@@ -1130,6 +1131,12 @@ end;
 procedure SQL.WhereFieldIsNull(const FieldName: string; const Union: TWhereUnion);
 begin
   FUWheres.Add(InsertUnion(Union) + FieldName + ' is Null');
+end;
+
+procedure SQL.WhereFieldLike(const FieldName, Value: string;
+  const Union: TWhereUnion);
+begin
+  FUWheres.Add(InsertUnion(Union) + FieldName + ' like '+QuotedStr(Value));
 end;
 
 procedure SQL.WhereFieldIN(const FieldName: string; const FieldValues: array of TDateTime; const Union: TWhereUnion);

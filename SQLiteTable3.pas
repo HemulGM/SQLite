@@ -1103,7 +1103,8 @@ begin
       iColNo := (i mod fColCount);
       case pInteger(Self.fColTypes[iColNo])^ of
         dtBlob:
-          TMemoryStream(fResults[i]).Free;
+          if Assigned(TMemoryStream(fResults[i])) then
+            TMemoryStream(fResults[i]).Free;
         dtStr:
           if fResults[i] <> nil then
           begin
