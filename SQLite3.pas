@@ -15,9 +15,10 @@ uses
   System.SysUtils, Winapi.Windows, Vcl.Dialogs, System.Sqlite;
 
 const
-  SQLiteDLL = 'sqlite3ex.dll';
+  SQLiteDLL = 'sqlite3ex.dll'; //sqlite3ex - библиотека с AES-256 шифрованием. Можно использовать стандартную, изменив эту константу
 
 //Возвращаемые значения для sqlite3_exec() и sqlite3_step()
+
 const
   SQLITE_OK = 0; // Successful result
   (* beginning-of-error-codes *)
@@ -60,8 +61,8 @@ const
   SQLITE_UTF16BE = 3;
   SQLITE_UTF16LE = 4;
   SQLITE_ANY = 5;
-  SQLITE_STATIC    {: TSQLite3Destructor}  = Pointer(0);
-  SQLITE_TRANSIENT {: TSQLite3Destructor}  = Pointer(-1);
+  SQLITE_STATIC    {: TSQLite3Destructor}   = Pointer(0);
+  SQLITE_TRANSIENT {: TSQLite3Destructor}   = Pointer(-1);
 
 type
   ESQLiteInitException = class(Exception)

@@ -124,13 +124,16 @@ type
     class function InsertInto(TableName: string): TInsertInto; overload;
     class function Delete: TDelete; overload;
     class function Delete(TableName: string): TDelete; overload;
-    class function DropTable: TDropTable;
+    class function DropTable: TDropTable; overload;
+    class function DropTable(TableName: string): TDropTable; overload;
     class function Update: TUpdate; overload;
     class function Update(TableName: string): TUpdate; overload;
     class function Select: TSelect; overload;
     class function Select(TableName: string): TSelect; overload;
+    class function Select(TableName: string; Fields: array of string): TSelect; overload;
     class function UpdateBlob: TUpdateBlob; overload;
     class function UpdateBlob(TableName: string): TUpdateBlob; overload;
+    class function UpdateBlob(TableName, FieldName: string): TUpdateBlob; overload;
     //
     class function PRAGMA(Key, Value: string): string;
     class function SelectLastInsertID: string;
@@ -386,6 +389,12 @@ begin
   inherited;
 end;
 
+class function SQL.DropTable(TableName: string): TDropTable;
+begin
+  Result := TDropTable.Create;
+  Result.TableName := TableName;
+end;
+
 class function SQL.DropTable: TDropTable;
 begin
   Result := TDropTable.Create;
@@ -411,6 +420,16 @@ class function SQL.Select(TableName: string): TSelect;
 begin
   Result := TSelect.Create;
   Result.TableName := TableName;
+end;
+
+class function SQL.Select(TableName: string; Fields: array of string): TSelect;
+var
+  i: Integer;
+begin
+  Result := TSelect.Create;
+  Result.TableName := TableName;
+  for i := Low(Fields) to High(Fields) do
+    Result.AddField(Fields[i]);
 end;
 
 class function SQL.SelectLastInsertID: string;
@@ -443,6 +462,13 @@ class function SQL.UpdateBlob(TableName: string): TUpdateBlob;
 begin
   Result := TUpdateBlob.Create;
   Result.TableName := TableName;
+end;
+
+class function SQL.UpdateBlob(TableName, FieldName: string): TUpdateBlob;
+begin
+  Result := TUpdateBlob.Create;
+  Result.TableName := TableName;
+  Result.BlobField := FieldName;
 end;
 
 { TTable }
@@ -715,14 +741,10 @@ begin
 end;
 
 procedure TSelect.LeftJoin(JoinTable, BaseField, JoinField: string; AndWhere: string = '');
-var
-  tmp: string;
 begin
   if AndWhere.Length > 0 then
-    tmp := ' and ' + AndWhere
-  else
-    tmp := '';
-  FJoins.Add('LEFT JOIN ' + JoinTable + ' ON ' + FName + '.' + BaseField + '=' + JoinTable + '.' + JoinField + tmp);
+    AndWhere := ' and ' + AndWhere;
+  FJoins.Add('LEFT JOIN ' + JoinTable + ' ON ' + FName + '.' + BaseField + '=' + JoinTable + '.' + JoinField + AndWhere);
 end;
 
 procedure TSelect.OrderBy(FieldName: string; DESC: Boolean);
@@ -1133,10 +1155,9 @@ begin
   FUWheres.Add(InsertUnion(Union) + FieldName + ' is Null');
 end;
 
-procedure SQL.WhereFieldLike(const FieldName, Value: string;
-  const Union: TWhereUnion);
+procedure SQL.WhereFieldLike(const FieldName, Value: string; const Union: TWhereUnion);
 begin
-  FUWheres.Add(InsertUnion(Union) + FieldName + ' like '+QuotedStr(Value));
+  FUWheres.Add(InsertUnion(Union) + FieldName + ' like ' + QuotedStr(Value));
 end;
 
 procedure SQL.WhereFieldIN(const FieldName: string; const FieldValues: array of TDateTime; const Union: TWhereUnion);
