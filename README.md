@@ -30,6 +30,38 @@
         Table.Free;
       end;
 
+UPDATE
+
+    with SQL.InsertInto(tnTableName) do
+    begin
+      AddValue(fnName, Item.Name);
+      AddValue(fnDesc, Item.Desc);
+      AddValue(fnDateCreate, Item.DateCreate);
+      FDB.DB.ExecSQL(GetSQL);
+      Item.ID := FDB.DB.GetLastInsertRowID;
+      EndCreate;
+    end
+  
+  
+    with SQL.Update(tnTableName) do
+    begin
+      AddValue(fnName, Item.Name);
+      AddValue(fnDesc, Item.Desc);
+      AddValue(fnDateCreate, Item.DateCreate);
+      WhereFieldEqual(fnID, Item.ID);
+      FDB.DB.ExecSQL(GetSQL);
+      EndCreate;
+    end;
+
+    with SQL.UpdateBlob(tnTableName, fnImage) do
+    begin
+      WhereFieldEqual(fnID, Item.ID);
+      Item.Image.SaveToStream(Mem);
+      DataBase.DB.UpdateBlob(GetSQL, Mem);
+      Mem.Free;
+      EndCreate;
+    end;
+
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIxMjc0MTc3NTFdfQ==
+eyJoaXN0b3J5IjpbMTI4MDQwOTMxNV19
 -->
