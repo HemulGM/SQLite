@@ -30,7 +30,7 @@
         Table.Free;
       end;
 
-UPDATE
+**INSERT**
 
     with SQL.InsertInto(tnTableName) do
     begin
@@ -42,6 +42,7 @@ UPDATE
       EndCreate;
     end
   
+  **UPDATE**
   
     with SQL.Update(tnTableName) do
     begin
@@ -53,15 +54,26 @@ UPDATE
       EndCreate;
     end;
 
+**UPDATE BLOB**
+
     with SQL.UpdateBlob(tnTableName, fnImage) do
     begin
       WhereFieldEqual(fnID, Item.ID);
       Item.Image.SaveToStream(Mem);
-      DataBase.DB.UpdateBlob(GetSQL, Mem);
+      FDB.DB.UpdateBlob(GetSQL, Mem);
       Mem.Free;
       EndCreate;
     end;
 
+**DELETE**
+
+    with SQL.Delete(tnTableName) do
+      begin
+        WhereFieldEqual(fnID, Items[Index].ID);
+        FDB.DB.ExecSQL(GetSQL);
+        EndCreate;
+      end;
+
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTI4MDQwOTMxNV19
+eyJoaXN0b3J5IjpbLTE1NjgxNjA0MDNdfQ==
 -->
