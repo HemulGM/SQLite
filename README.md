@@ -33,37 +33,37 @@
 **INSERT**
 
     with SQL.InsertInto(tnTableName) do
-    begin
-      AddValue(fnName, Item.Name);
-      AddValue(fnDesc, Item.Desc);
-      AddValue(fnDateCreate, Item.DateCreate);
-      FDB.DB.ExecSQL(GetSQL);
-      Item.ID := FDB.DB.GetLastInsertRowID;
-      EndCreate;
-    end
+      begin
+        AddValue(fnName, Item.Name);
+        AddValue(fnDesc, Item.Desc);
+        AddValue(fnDateCreate, Item.DateCreate);
+        FDB.DB.ExecSQL(GetSQL);
+        Item.ID := FDB.DB.GetLastInsertRowID;
+        EndCreate;
+      end;
   
   **UPDATE**
   
     with SQL.Update(tnTableName) do
-    begin
-      AddValue(fnName, Item.Name);
-      AddValue(fnDesc, Item.Desc);
-      AddValue(fnDateCreate, Item.DateCreate);
-      WhereFieldEqual(fnID, Item.ID);
-      FDB.DB.ExecSQL(GetSQL);
-      EndCreate;
-    end;
+      begin
+        AddValue(fnName, Item.Name);
+        AddValue(fnDesc, Item.Desc);
+        AddValue(fnDateCreate, Item.DateCreate);
+        WhereFieldEqual(fnID, Item.ID);
+        FDB.DB.ExecSQL(GetSQL);
+        EndCreate;
+      end;
 
 **UPDATE BLOB**
 
     with SQL.UpdateBlob(tnTableName, fnImage) do
-    begin
-      WhereFieldEqual(fnID, Item.ID);
-      Item.Image.SaveToStream(Mem);
-      FDB.DB.UpdateBlob(GetSQL, Mem);
-      Mem.Free;
-      EndCreate;
-    end;
+      begin
+        WhereFieldEqual(fnID, Item.ID);
+        Item.Image.SaveToStream(Mem);
+        FDB.DB.UpdateBlob(GetSQL, Mem);
+        Mem.Free;
+        EndCreate;
+      end;
 
 **DELETE**
 
@@ -74,6 +74,18 @@
         EndCreate;
       end;
 
+**CREATE TABLE**
+
+    with SQL.CreateTable(tnTableName) do
+      begin
+        AddField(fnID, ftInteger, True, True);
+        AddField(fnName, ftString);
+        AddField(fnDesc, ftString);
+        AddField(fnDateCreate, ftDateTime);
+        FDB.DB.ExecSQL(GetSQL);
+        EndCreate;
+      end;
+
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1NjgxNjA0MDNdfQ==
+eyJoaXN0b3J5IjpbLTEwODU1NDI0NTNdfQ==
 -->
