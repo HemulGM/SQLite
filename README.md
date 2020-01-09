@@ -8,7 +8,9 @@
 Конструктор позволяет составить запрос посредством кода Delphi (SQL.Select, SQL.Delete, SQL.Update ...)
 Конструктор избавляет от написания запросов и хранения его в коде.
 
-Доступные конструкции: select, update, delete, insert into, drop table, create table, where, order by, left | inner | outer | right join, pragma, IncField, DecField.
+Доступные конструкции: *select, update, delete, insert into, drop table, create table, where, order by, left | inner | outer | right join, pragma, incfield*, decfield**.
+
+**SELECT**
 
     with SQL.Select(tnTableName, [fnID, fnName, fnDesc, fnDateCreate]) do
       begin
@@ -29,5 +31,5 @@
       end;
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTY1NTYwNjA3MF19
+eyJoaXN0b3J5IjpbLTE3NzgxMzMwODJdfQ==
 -->
