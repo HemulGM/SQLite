@@ -268,9 +268,9 @@ var
   SQLite3_Result_Text: TSQLite3_Result_Text;
   SQLite3_Result_Int: TSQLite3_Result_Int;
 
-function SQLiteErrorStr(SQLiteErrorCode: Integer): AnsiString;
+function SQLiteErrorStr(SQLiteErrorCode: Integer): string;
 
-function SQLiteFieldType(SQLiteFieldTypeCode: Integer): AnsiString;
+function SQLiteFieldType(SQLiteFieldTypeCode: Integer): string;
 
 procedure SQLiteUpper(Context: Pointer; Arg: Integer; Args: PPointerArray); cdecl;
 
@@ -285,8 +285,8 @@ var
   S1, S2: string;
   Result: Integer;
 begin
-  S1 := AnsiUpperCase(AnsiString(SQLite3_Value_Text(Args[0])));
-  S2 := AnsiUpperCase(AnsiString(SQLite3_Value_Text(Args[1])));
+  S1 := AnsiUpperCase(string(SQLite3_Value_Text(Args[0])));
+  S2 := AnsiUpperCase(string(SQLite3_Value_Text(Args[1])));
   Result := Ord(Pos(S2, S1) <> 0);
   SQLite3_Result_Int(Context, Result); //select co_name from countries where contains(CO_NAME, 'ро')
 end;
@@ -295,7 +295,7 @@ procedure SQLiteUpper(Context: Pointer; Arg: Integer; Args: PPointerArray);
 var
   S: string;
 begin
-  S := AnsiString(SQLite3_Value_Text(Args[0]));
+  S := string(SQLite3_Value_Text(Args[0]));
   S := AnsiUpperCase(S);
   SQLite3_Result_Text(Context, PAnsiChar(AnsiString(S)), S.Length, nil);
 end;
@@ -304,12 +304,12 @@ procedure SQLiteLower(Context: Pointer; Arg: Integer; Args: PPointerArray);
 var
   S: string;
 begin
-  S := AnsiString(SQLite3_Value_Text(Args[0]));
+  S := string(SQLite3_Value_Text(Args[0]));
   S := AnsiLowerCase(S);
   SQLite3_Result_Text(Context, PAnsiChar(AnsiString(S)), S.Length, nil);
 end;
 
-function SQLiteFieldType(SQLiteFieldTypeCode: Integer): AnsiString;
+function SQLiteFieldType(SQLiteFieldTypeCode: Integer): string;
 begin
   case SQLiteFieldTypeCode of
     SQLITE_INTEGER:
@@ -327,7 +327,7 @@ begin
   end;
 end;
 
-function SQLiteErrorStr(SQLiteErrorCode: Integer): AnsiString;
+function SQLiteErrorStr(SQLiteErrorCode: Integer): string;
 begin
   case SQLiteErrorCode of
     SQLITE_OK:

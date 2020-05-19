@@ -394,7 +394,7 @@ var
   Handled: Boolean;
 begin
   ErrCode := SQLite3_ErrCode(self.fDB);
-  Msg := SQLite3_ErrMsg(self.fDB);
+  Msg := string(SQLite3_ErrMsg(self.fDB));
   if Assigned(FSQLErrorHandle) then
   begin
     FSQLErrorHandle(Self, ErrCode, Msg, Handled);
@@ -823,7 +823,7 @@ end;
 
 function TSQLiteDatabase.Version: string;
 begin
-  Result := SQLite3_Version;
+  Result := string(SQLite3_Version);
 end;
 
 procedure TSQLiteDatabase.AddCustomCollate(name: string; xCompare: TCollateXCompare);
@@ -1006,7 +1006,7 @@ begin
               fColTypes := TList.Create;
               fColCount := SQLite3_ColumnCount(Stmt);
               for i := 0 to Pred(fColCount) do
-                fCols.Add(AnsiUpperCase(SQLite3_ColumnName(Stmt, i)));
+                fCols.Add(AnsiUpperCase(string(SQLite3_ColumnName(Stmt, i))));
               for i := 0 to Pred(fColCount) do
               begin
                 New(thisColType);
@@ -1446,7 +1446,7 @@ begin
   fCols := TStringList.Create;
   fColCount := SQLite3_ColumnCount(fstmt);
   for i := 0 to Pred(fColCount) do
-    fCols.Add(AnsiUpperCase(SQLite3_ColumnName(fstmt, i)));
+    fCols.Add(AnsiUpperCase(string(SQLite3_ColumnName(fstmt, i))));
   Next;
 end;
 
@@ -1560,7 +1560,7 @@ end;
 
 function TSQLiteUniTable.GetFields(i: Cardinal): string;
 begin
-  Result := SQLite3_ColumnText(fstmt, i);
+  Result := string(SQLite3_ColumnText(fstmt, i));
 end;
 
 function TSQLiteUniTable.Next: Boolean;
