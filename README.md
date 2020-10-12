@@ -11,7 +11,7 @@
 Доступные конструкции: *select, update, delete, insert into, drop table, create table, where, order by, left | inner | outer | right join, pragma, incfield\*, decfield\*.*
 
 **SELECT**
-
+```Delphi
     with SQL.Select(tnTableName, [fnID, fnName, fnDesc, fnDateCreate]) do
       begin
         OrderBy(fnName, True);
@@ -29,9 +29,9 @@
         end;
         Table.Free;
       end;
-
+```
 **INSERT**
-
+```Delphi
     with SQL.InsertInto(tnTableName) do
       begin
         AddValue(fnName, Item.Name);
@@ -41,9 +41,9 @@
         Item.ID := FDB.DB.GetLastInsertRowID;
         EndCreate;
       end;
-  
+```  
   **UPDATE**
-  
+```Delphi  
     with SQL.Update(tnTableName) do
       begin
         AddValue(fnName, Item.Name);
@@ -53,9 +53,9 @@
         FDB.DB.ExecSQL(GetSQL);
         EndCreate;
       end;
-
+```
 **UPDATE BLOB**
-
+```Delphi
     with SQL.UpdateBlob(tnTableName, fnImage) do
       begin
         WhereFieldEqual(fnID, Item.ID);
@@ -64,18 +64,18 @@
         Mem.Free;
         EndCreate;
       end;
-
+```
 **DELETE**
-
+```Delphi
     with SQL.Delete(tnTableName) do
       begin
         WhereFieldEqual(fnID, Items[Index].ID);
         FDB.DB.ExecSQL(GetSQL);
         EndCreate;
       end;
-
+```
 **CREATE TABLE**
-
+```Delphi
     with SQL.CreateTable(tnTableName) do
       begin
         AddField(fnID, ftInteger, True, True);
@@ -85,7 +85,7 @@
         FDB.DB.ExecSQL(GetSQL);
         EndCreate;
       end;
-
+```
 <!--stackedit_data:
 eyJoaXN0b3J5IjpbLTEwODU1NDI0NTNdfQ==
 -->
