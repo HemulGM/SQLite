@@ -202,7 +202,7 @@ type
     //
 
     function GetTable(const SQL: string): TSQLiteTable; overload; deprecated 'Use Query or GetUniTable';
-    function GetTable(const SQL: string; const Bindings: array of const): TSQLiteTable; overload; deprecated
+    function GetTable(const SQL: string; const Bindings: array of const): TSQLiteTable; overload; deprecated 'Use Query or GetUniTable';
     function Query(const SQL: string): TSQLiteTable; overload;
     function Query(const SQL: string; const Bindings: array of const): TSQLiteTable; overload;
     function GetTableValue(const SQL: string): Int64; overload;
@@ -212,7 +212,7 @@ type
     function GetTableString(const SQL: string): string; overload;
     function GetTableString(const SQL: string; const Bindings: array of const): string; overload;
     function GetSQLofTable(const TableName: string; DataBase: string = ''): string;
-    function GetTableStrings(const SQL: string; const Value: TStrings; FieldNum: Integer = 0): Boolean; overload;
+    function GetTableStrings(const SQL: string; const Value: TStrings): Boolean; overload;
     function GetTableStrings(const SQL: string; const Value: TStrings; FieldNum: Integer; const Bindings: array of const): Boolean; overload;
     //
     procedure ExecSQL(const SQL: string); overload;
@@ -676,7 +676,6 @@ var
   DataPtr: Pointer;
   DataSize: Integer;
   AnsiStr: AnsiString;
-  Str: string;
   AnsiStrPtr: PAnsiString;
   I: Integer;
 begin
@@ -995,7 +994,7 @@ begin
   end;
 end;
 
-function TSQLiteDatabase.GetTableStrings(const SQL: string; const Value: TStrings; const Bindings: array of const): Boolean;
+function TSQLiteDatabase.GetTableStrings(const SQL: string; const Value: TStrings; FieldNum: Integer; const Bindings: array of const): Boolean;
 var
   Table: TSQLiteUniTable;
 begin
@@ -1004,7 +1003,7 @@ begin
   try
     while not Table.EoF do
     begin
-      Value.Add(Table.FieldAsString(0));
+      Value.Add(Table.FieldAsString(FieldNum));
       Table.Next;
     end;
   finally
@@ -1015,7 +1014,7 @@ end;
 
 function TSQLiteDatabase.GetTableStrings(const SQL: string; const Value: TStrings): Boolean;
 begin
-  Result := GetTableStrings(SQL, Value, []);
+  Result := GetTableStrings(SQL, Value, 0, []);
 end;
 
 function TSQLiteDatabase.Backup(TargetDB, TargetName, SourceName: string): Integer;

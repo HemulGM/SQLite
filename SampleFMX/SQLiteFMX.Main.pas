@@ -56,7 +56,10 @@ begin
   Query.DisposeOf;
 
   DB.CreateFunction('UPPER_RU', @SQLiteUpper);
-  with SQL.Select(SQL.Select('(select "à" as col union all select "á" union all select "â")', '*').AsSubquery, ['UPPER_RU(col)']) do
+  with SQL.Select(
+        SQL.Select('(select "à" as col union all select "á" union all select "â")', '*').AsSubquery,
+        ['UPPER_RU(col)'])
+  do
   begin
     WhereField('UPPER_RU(col)', '=', 'Á');
     Query := DB.Query(GetSQL(True));
