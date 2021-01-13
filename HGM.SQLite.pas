@@ -77,8 +77,10 @@ unit HGM.SQLite;
 interface
 
 uses
-  Winapi.Windows, System.Classes, System.SysUtils, System.Generics.Collections,
-  HGM.SQLite.Wrapper;
+  {$IFDEF WIN32}
+  Winapi.Windows,
+  {$ENDIF}
+  HGM.SQLite.Wrapper, System.Classes, System.SysUtils, System.Generics.Collections;
 
 const
   ERROR_EOF = 'Table is at End of File';
@@ -198,19 +200,20 @@ type
     /// </summary>
     property LastInsertRowID: Int64 read GetLastInsertRowID;
     //
+
+    function GetTable(const SQL: string): TSQLiteTable; overload; deprecated 'Use Query or GetUniTable';
+    function GetTable(const SQL: string; const Bindings: array of const): TSQLiteTable; overload; deprecated
     function Query(const SQL: string): TSQLiteTable; overload;
     function Query(const SQL: string; const Bindings: array of const): TSQLiteTable; overload;
-    function GetTable(const SQL: string): TSQLiteTable; overload; deprecated;
-    function GetTable(const SQL: string; const Bindings: array of const): TSQLiteTable; overload; deprecated;
     function GetTableValue(const SQL: string): Int64; overload;
     function GetTableValue(const SQL: string; const Bindings: array of const): Int64; overload;
     function GetUniTable(const SQL: string): TSQLiteUniTable; overload;
     function GetUniTable(const SQL: string; const Bindings: array of const): TSQLiteUniTable; overload;
     function GetTableString(const SQL: string): string; overload;
     function GetTableString(const SQL: string; const Bindings: array of const): string; overload;
-    function GetTableStrings(const SQL: string; const Value: TStrings): Boolean; overload;
-    function GetTableStrings(const SQL: string; const Value: TStrings; const Bindings: array of const): Boolean; overload;
     function GetSQLofTable(const TableName: string; DataBase: string = ''): string;
+    function GetTableStrings(const SQL: string; const Value: TStrings; FieldNum: Integer = 0): Boolean; overload;
+    function GetTableStrings(const SQL: string; const Value: TStrings; FieldNum: Integer; const Bindings: array of const): Boolean; overload;
     //
     procedure ExecSQL(const SQL: string); overload;
     procedure ExecSQL(const SQL: string; const Bindings: array of const); overload;
@@ -594,7 +597,6 @@ begin
     // any share violation causing exception!
     //    self.ExecSQL('PRAGMA SYNCHRONOUS=NORMAL;');
     //    self.ExecSQL('PRAGMA temp_store = MEMORY;');
-
   finally
     if Assigned(Msg) then
       SQLite3_Free(Msg);
@@ -759,7 +761,8 @@ begin
           if (Bindings[I].VObject is TCustomMemoryStream) then
           begin
             BlobMemStream := TCustomMemoryStream(Bindings[I].VObject);
-            if (sqlite3_bind_blob(Stmt, I + 1, @PAnsiChar(BlobMemStream.Memory)[BlobMemStream.Position], BlobMemStream.Size - BlobMemStream.Position, SQLITE_STATIC) <> SQLITE_OK) then
+            if (sqlite3_bind_blob(Stmt, I + 1, @PAnsiChar(BlobMemStream.Memory)[BlobMemStream.Position], BlobMemStream.Size
+              - BlobMemStream.Position, SQLITE_STATIC) <> SQLITE_OK) then
               RaiseError('Could not bind BLOB', 'BindData');
           end
           else if (Bindings[I].VObject is TStream) then
