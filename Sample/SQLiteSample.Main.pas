@@ -34,14 +34,13 @@ var
 begin
   TSQLiteDatabase.LoadSqliteLib('sqlite3ex.dll');
 
-  DB := TSQLiteDatabase.Create('data.db');
+  DB := TSQLiteDatabase.Create(':memory:');
   with SQL.CreateTable('test1') do
   begin
     AddField('id', ftInteger, True, True);
     AddField('text', ftString);
     DB.ExecSQL(GetSQL(True));
   end;
-
   Memo1.Lines.Add(DB.TotalChanges.ToString);
   Memo1.Lines.Add(DB.RowsChanged.ToString);
 
@@ -66,7 +65,7 @@ begin
   Memo1.Lines.Add(DB.TotalChanges.ToString);
   Memo1.Lines.Add(DB.RowsChanged.ToString);
 
-  Query := DB.Query('select UPPER(col) from (select "à" as col union all select "á" union all select "â")');
+  Query := DB.Query('select UPPER(col) from (select ? as col union all select ? union all select ?)', ['à', 'á', 'â']);
   while not Query.EoF do
   begin
     Memo1.Lines.Add(Query.FieldAsString(0));
@@ -75,7 +74,7 @@ begin
   Query.DisposeOf;
 
   DB.CreateFunction('UPPER_RU', @SQLiteUpper);
-  Query := DB.Query('select UPPER_RU(col) from (select "à" as col union all select "á" union all select "â") WHERE UPPER_RU(col) = "Á"');
+  Query := DB.Query('select UPPER_RU(col) as C from (select "à" as col union all select "á" union all select "â") WHERE C = "Á"');
   while not Query.EoF do
   begin
     Memo1.Lines.Add(Query.FieldAsString(0));
