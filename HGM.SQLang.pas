@@ -85,9 +85,12 @@ type
     procedure WhereParenthesesOpen(Union: TWhereUnion = wuAnd);
     procedure WhereParenthesesClose;
     procedure WhereFieldLike(const FieldName: string; const Value: string; const Union: TWhereUnion = wuAnd); overload;
-    procedure WhereFieldBetween(const FieldName: string; const ValueLeft, ValueRight: TDateTime; const Union: TWhereUnion = wuAnd); overload;
-    procedure WhereFieldBetween(const FieldName: string; const ValueLeft, ValueRight: Extended; const Union: TWhereUnion = wuAnd); overload;
-    procedure WhereFieldBetween(const FieldName: string; const ValueLeft, ValueRight: Integer; const Union: TWhereUnion = wuAnd); overload;
+    procedure WhereFieldBetween(const FieldName: string; const ValueLeft, ValueRight: TDateTime; const Union:
+      TWhereUnion = wuAnd); overload;
+    procedure WhereFieldBetween(const FieldName: string; const ValueLeft, ValueRight: Extended; const Union: TWhereUnion
+      = wuAnd); overload;
+    procedure WhereFieldBetween(const FieldName: string; const ValueLeft, ValueRight: Integer; const Union: TWhereUnion
+      = wuAnd); overload;
     procedure WhereFieldIsNull(const FieldName: string; const Union: TWhereUnion = wuAnd);
     procedure WhereFieldIsNotNull(const FieldName: string; const Union: TWhereUnion = wuAnd);
     procedure WhereField(const FieldName, Oper: string; const FieldValue: string; const Union: TWhereUnion = wuAnd); overload;
@@ -97,11 +100,16 @@ type
     procedure WhereField(const FieldName, Oper: string; const FieldValue: Boolean; const Union: TWhereUnion = wuAnd); overload;
     procedure WhereFieldWOQ(const FieldName, Oper: string; const FieldValue: string; const Union: TWhereUnion = wuAnd);  //Без ковычек
 
-    procedure WhereFieldIN(const FieldName: string; const FieldValues: array of string; const Union: TWhereUnion = wuAnd); overload;
-    procedure WhereFieldIN(const FieldName: string; const FieldValues: array of Extended; const Union: TWhereUnion = wuAnd); overload;
-    procedure WhereFieldIN(const FieldName: string; const FieldValues: array of Integer; const Union: TWhereUnion = wuAnd); overload;
-    procedure WhereFieldIN(const FieldName: string; const FieldValues: array of TDateTime; const Union: TWhereUnion = wuAnd); overload;
-    procedure WhereFieldIN(const FieldName: string; const FieldValues: array of Boolean; const Union: TWhereUnion = wuAnd); overload;
+    procedure WhereFieldIN(const FieldName: string; const FieldValues: array of string; const Union: TWhereUnion = wuAnd);
+      overload;
+    procedure WhereFieldIN(const FieldName: string; const FieldValues: array of Extended; const Union: TWhereUnion =
+      wuAnd); overload;
+    procedure WhereFieldIN(const FieldName: string; const FieldValues: array of Integer; const Union: TWhereUnion =
+      wuAnd); overload;
+    procedure WhereFieldIN(const FieldName: string; const FieldValues: array of TDateTime; const Union: TWhereUnion =
+      wuAnd); overload;
+    procedure WhereFieldIN(const FieldName: string; const FieldValues: array of Boolean; const Union: TWhereUnion =
+      wuAnd); overload;
     procedure WhereFieldEqual(const FieldName: string; const FieldValue: string; const Union: TWhereUnion = wuAnd); overload;
     procedure WhereFieldEqual(const FieldName: string; const FieldValue: Extended; const Union: TWhereUnion = wuAnd); overload;
     procedure WhereFieldEqual(const FieldName: string; const FieldValue: Integer; const Union: TWhereUnion = wuAnd); overload;
@@ -110,7 +118,8 @@ type
     procedure WhereNotFieldEqual(const FieldName: string; const FieldValue: string; const Union: TWhereUnion = wuAnd); overload;
     procedure WhereNotFieldEqual(const FieldName: string; const FieldValue: Extended; const Union: TWhereUnion = wuAnd); overload;
     procedure WhereNotFieldEqual(const FieldName: string; const FieldValue: Integer; const Union: TWhereUnion = wuAnd); overload;
-    procedure WhereNotFieldEqual(const FieldName: string; const FieldValue: TDateTime; const Union: TWhereUnion = wuAnd); overload;
+    procedure WhereNotFieldEqual(const FieldName: string; const FieldValue: TDateTime; const Union: TWhereUnion = wuAnd);
+      overload;
     procedure WhereNotFieldEqual(const FieldName: string; const FieldValue: Boolean; const Union: TWhereUnion = wuAnd); overload;
     procedure WhereExists(const Select: string; const Union: TWhereUnion = wuAnd);
     procedure WhereStr(const Value: string);
@@ -130,7 +139,7 @@ type
     class function Update(TableName: string): TUpdate; overload;
     class function Select: TSelect; overload;
     class function Select(TableName: string = ''; Field: string = ''): TSelect; overload;
-    class function Select(TableName: string = ''; Fields: TArray<string> = []): TSelect; overload;
+    class function Select(TableName: string; Fields: TArray<string>): TSelect; overload;
     class function UpdateBlob: TUpdateBlob; overload;
     class function UpdateBlob(TableName: string): TUpdateBlob; overload;
     class function UpdateBlob(TableName, FieldName: string): TUpdateBlob; overload;
@@ -149,7 +158,8 @@ type
     FFields: TFields;
   public
     function GetSQL(AutoFree: Boolean = False): string; virtual;
-    procedure AddField(Name: string; FieldType: TFieldType; PrimaryKey: Boolean = False; NotNull: Boolean = False; AutoInc: Boolean = False); virtual;
+    procedure AddField(Name: string; FieldType: TFieldType; PrimaryKey: Boolean = False; NotNull: Boolean = False;
+      AutoInc: Boolean = False); virtual;
     procedure EndCreate; virtual;
     procedure Clear; virtual;
     constructor Create(ATableName: string = ''; AIfNotExists: Boolean = True); overload; virtual;
@@ -428,8 +438,15 @@ begin
 end;
 
 class function SQL.Select(TableName, Field: string): TSelect;
+var
+  FFields: TArray<string>;
 begin
-  Result := SQL.Select(TableName, [Field]);
+  if not Field.IsEmpty then
+  begin
+    SetLength(FFields, 1);
+    FFields[0] := Field;
+  end;
+  Result := SQL.Select(TableName, FFields);
 end;
 
 class function SQL.SelectLastInsertID: string;
