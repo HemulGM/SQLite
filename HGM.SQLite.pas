@@ -80,7 +80,8 @@ uses
   {$IFDEF WIN32}
   Winapi.Windows,
   {$ENDIF}
-  HGM.SQLite.Wrapper, System.Classes, System.SysUtils, System.Generics.Collections;
+  HGM.SQLite.Wrapper, System.Classes, System.SysUtils,
+  System.Generics.Collections;
 
 const
   ERROR_EOF = 'Table is at End of File';
@@ -207,6 +208,8 @@ type
     function Query(const SQL: string; const Bindings: array of const): TSQLiteTable; overload;
     function GetTableValue(const SQL: string): Int64; overload;
     function GetTableValue(const SQL: string; const Bindings: array of const): Int64; overload;
+    function GetRowValues(const SQL: string): TArray<Variant>; overload;
+    function GetRowValues(const SQL: string; const Bindings: array of const): TArray<Variant>; overload;
     function GetUniTable(const SQL: string): TSQLiteUniTable; overload;
     function GetUniTable(const SQL: string; const Bindings: array of const): TSQLiteUniTable; overload;
     function GetTableString(const SQL: string): string; overload;
@@ -313,6 +316,8 @@ type
     function FieldAsBoolean(FieldName: string): Boolean; overload;
     function FieldAsString(FieldName: string): string; overload;
     function FieldIsNull(FieldName: string): Boolean; overload;
+    function FieldType(FieldName: string): Integer; overload;
+    function FieldType(i: Integer): Integer; overload;
     function MoveFirst: Boolean;
     function MoveLast: Boolean;
     function MoveTo(Position: Cardinal): Boolean;
@@ -368,6 +373,8 @@ type
     function FieldIsNull(FieldName: string): Boolean; overload;
     function FieldAsDateTime(FieldName: string): TDateTime; overload;
     function FieldAsBoolean(FieldName: string): Boolean; overload;
+    function FieldType(FieldName: string): Integer; overload;
+    function FieldType(i: Integer): Integer; overload;
     function Next: Boolean;
     property ColCount: Cardinal read FColCount;
     property Columns[i: Integer]: string read GetColumns;
@@ -396,6 +403,9 @@ procedure SQLiteContains(Context: Pointer; Arg: Integer; Args: PPointerArray); c
 function SystemCollate(Userdta: pointer; Buf1Len: integer; Buf1: pointer; Buf2Len: integer; Buf2: pointer): integer; cdecl;
 
 implementation
+
+uses
+  System.Variants;
 
 {$WARNINGS OFF}
 function XORString(Text, Key: string; Offset: Integer = 0): string;
@@ -953,16 +963,51 @@ end;
 
 function TSQLiteDatabase.GetTableValue(const SQL: string; const Bindings: array of const): int64;
 var
-  Table: TSQLiteUniTable;
+  Table: TSQLiteTable;
 begin
   Result := -1;
-  Table := GetUniTable(SQL, Bindings);
+  Table := Query(SQL, Bindings);
   try
     if not Table.EoF then
       Result := Table.FieldAsInteger(0);
   finally
     Table.Free;
   end;
+end;
+
+function TSQLiteDatabase.GetRowValues(const SQL: string; const Bindings: array of const): TArray<Variant>;
+var
+  Table: TSQLiteTable;
+  i: Integer;
+begin
+  Result := [];
+  Table := Query(SQL, Bindings);
+  try
+    if not Table.EoF then
+    begin
+      SetLength(Result, Table.ColCount);
+      for i := 0 to Table.ColCount - 1 do
+        case Table.FieldType(i) of
+          SQLITE_NULL:
+            Result[i] := Null;
+          SQLITE_INTEGER:
+            Result[i] := Table.FieldAsInteger(i);
+          SQLITE_FLOAT:
+            Result[i] := Table.FieldAsDouble(i);
+          SQLITE_TEXT:
+            Result[i] := Table.FieldAsString(i);
+          SQLITE_BLOB:
+            Result[i] := Null;
+        end;
+    end;
+  finally
+    Table.Free;
+  end;
+end;
+
+function TSQLiteDatabase.GetRowValues(const SQL: string): TArray<Variant>;
+begin
+  Result := GetRowValues(SQL, []);
 end;
 
 function TSQLiteDatabase.GetTableString(const SQL: string): string;
@@ -1554,6 +1599,16 @@ begin
   Result := FieldAsString(GetFieldIndex(FieldName));
 end;
 
+function TSQLiteTable.FieldType(FieldName: string): Integer;
+begin
+  Result := FColTypes[GetFieldIndex(FieldName)];
+end;
+
+function TSQLiteTable.FieldType(i: Integer): Integer;
+begin
+  Result := FColTypes[i];
+end;
+
 function TSQLiteTable.FieldIsNull(FieldName: string): Boolean;
 begin
   Result := FieldIsNull(GetFieldIndex(FieldName));
@@ -1840,6 +1895,16 @@ end;
 function TSQLiteUniTable.FieldIsNull(FieldName: string): Boolean;
 begin
   Result := FieldIsNull(GetFieldIndex(FieldName));
+end;
+
+function TSQLiteUniTable.FieldType(i: Integer): Integer;
+begin
+  Result := SQLite3_ColumnType(FStmt, i);
+end;
+
+function TSQLiteUniTable.FieldType(FieldName: string): Integer;
+begin
+  Result := FieldType(GetFieldIndex(FieldName));
 end;
 
 { TSQLiteSynchronousHelper }
