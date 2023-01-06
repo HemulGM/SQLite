@@ -131,7 +131,7 @@ type
     class function Update: TUpdate; overload;
     class function Update(TableName: string): TUpdate; overload;
     class function Select: TSelect; overload;
-    class function Select(TableName: string = ''; Field: string = ''): TSelect; overload;
+    class function Select(TableName: string; Field: string = ''): TSelect; overload;
     class function Select(TableName: string; Fields: TArray<string>): TSelect; overload;
     class function UpdateBlob: TUpdateBlob; overload;
     class function UpdateBlob(TableName: string): TUpdateBlob; overload;
